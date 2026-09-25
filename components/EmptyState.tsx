@@ -1,41 +1,75 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Code,
-  Lightbulb,
   GraduationCap,
   Mail,
   Sparkles,
-  Compass,
-  FileQuestion,
-  Cpu
+  Calculator,
+  Briefcase,
+  HelpCircle,
+  Lightbulb,
+  BookOpen
 } from 'lucide-react';
 
 interface EmptyStateProps {
   onSelectPrompt: (prompt: string) => void;
 }
 
+type CategoryType = 'all' | 'coding' | 'math' | 'science' | 'writing' | 'business' | 'general';
+
 export const EmptyState: React.FC<EmptyStateProps> = ({ onSelectPrompt }) => {
-  const suggestions = [
+  const [activeCategory, setActiveCategory] = useState<CategoryType>('all');
+
+  const allSuggestions = [
     {
+      categoryType: 'coding',
       icon: Code,
       category: 'Coding & Dev',
       prompt: 'Write a Python script to fetch real-time weather and parse JSON data cleanly.',
     },
     {
+      categoryType: 'math',
+      icon: Calculator,
+      category: 'Math & Logic',
+      prompt: 'Solve the integral of e^(2x) * sin(3x) dx step-by-step with explanation.',
+    },
+    {
+      categoryType: 'science',
       icon: GraduationCap,
-      category: 'Science & Concept',
+      category: 'Science & Physics',
       prompt: 'Explain quantum entanglement and superposition in simple, intuitive terms.',
     },
     {
-      icon: Cpu,
-      category: 'Architecture',
-      prompt: 'Compare relational SQL (PostgreSQL) vs NoSQL (MongoDB): pros, cons, and when to use each.',
-    },
-    {
+      categoryType: 'writing',
       icon: Mail,
       category: 'Writing & Email',
       prompt: 'Draft a polite and persuasive email negotiating a project deadline extension.',
     },
+    {
+      categoryType: 'business',
+      icon: Briefcase,
+      category: 'Business & Strategy',
+      prompt: 'Create a go-to-market strategy for a SaaS AI startup targeting SMBs.',
+    },
+    {
+      categoryType: 'general',
+      icon: BookOpen,
+      category: 'General Knowledge',
+      prompt: 'Explain the historical causes and geopolitical impact of the Renaissance in Europe.',
+    },
+  ];
+
+  const filteredSuggestions = activeCategory === 'all'
+    ? allSuggestions.slice(0, 4)
+    : allSuggestions.filter((s) => s.categoryType === activeCategory);
+
+  const categories: Array<{ id: CategoryType; label: string }> = [
+    { id: 'all', label: 'All Types' },
+    { id: 'coding', label: 'Coding' },
+    { id: 'math', label: 'Math' },
+    { id: 'science', label: 'Science' },
+    { id: 'writing', label: 'Writing' },
+    { id: 'business', label: 'Business' },
   ];
 
   return (
@@ -54,12 +88,29 @@ export const EmptyState: React.FC<EmptyStateProps> = ({ onSelectPrompt }) => {
         What can I help with today?
       </h1>
       <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400 max-w-md">
-        Ask anything—from code debugging and technical explanations to creative writing and problem solving.
+        Answers all types of questions—coding, mathematics, science, writing, business, logic, and everyday topics.
       </p>
 
+      {/* Category Pills */}
+      <div className="flex items-center justify-center gap-1.5 flex-wrap mt-6 mb-2">
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => setActiveCategory(cat.id)}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+              activeCategory === cat.id
+                ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-semibold'
+                : 'bg-neutral-100 dark:bg-[#282828] text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-[#323232]'
+            }`}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
       {/* Suggestion Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full mt-8 text-left">
-        {suggestions.map((item, index) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full mt-4 text-left">
+        {filteredSuggestions.map((item, index) => {
           const Icon = item.icon;
           return (
             <button
@@ -81,7 +132,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({ onSelectPrompt }) => {
 
       {/* Website Creator attribution badge */}
       <div className="mt-8 flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-neutral-200/90 dark:border-neutral-800 bg-neutral-50/80 dark:bg-[#1e1e1e]/60 text-xs text-neutral-500 dark:text-neutral-400">
-        <span>Crafted with care by</span>
+        <span>This website is made by</span>
         <span className="font-semibold text-neutral-800 dark:text-neutral-200">Ishan Jaiswal</span>
       </div>
     </div>
