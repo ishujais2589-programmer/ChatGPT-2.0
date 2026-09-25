@@ -1,0 +1,6 @@
+{
+  "name": "ChatGPT AI Assistant",
+  "description": "An intelligent AI chatbot with a ChatGPT-style interface, answers to all questions, dark mode toggle, and message history logs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
